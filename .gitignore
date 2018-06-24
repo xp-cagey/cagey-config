@@ -1,9 +1,9 @@
 # Maven target
-target/
-cagey-config-api/target/
-cagey-config-spi/target/
-cagey-config-lightbend/target/
-cagey-config-core/target/
+/target/
+/cagey-config-api/target/
+/cagey-config-spi/target/
+/cagey-config-lightbend/target/
+/cagey-config-core/target/
 
 # IDE
 *.iml

@@ -8,6 +8,6 @@
     <parent>
         <groupId>com.xpcagey</groupId>
         <artifactId>cagey-config</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
 </project>
