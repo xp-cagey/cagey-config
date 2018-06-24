@@ -1,0 +1,14 @@
+# Maven target
+/cagey-config-api/target/
+/cagey-config-spi/target/
+/cagey-config-lightbend/target/
+/cagey-config-core/target/
+
+# IDE
+*.iml
+*.ipr
+*.iws
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
