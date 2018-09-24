@@ -1,10 +1,7 @@
 package com.xpcagey.config.lightbend;
 
-import com.xpcagey.config.spi.ValueCommand;
 import com.xpcagey.config.spi.helpers.TestingSink;
 import org.junit.Test;
-
-import java.util.Iterator;
 
 import static org.junit.Assert.*;
 
@@ -12,9 +9,11 @@ import static org.junit.Assert.*;
  * These values come from reference.conf
  */
 public class ConfigSourceUnitTests {
+    final ClassLoader classLoader = getClass().getClassLoader();
+
     @Test
     public void shouldLoadValuesCorrectly() {
-        try (ConfigSource src = new ConfigSource("/")) {
+        try (ConfigSource src = new ConfigSource(classLoader, "/")) {
             assertEquals(src.getPath(), "/");
             TestingSink sink = new TestingSink();
             src.initialize(sink);
@@ -31,7 +30,7 @@ public class ConfigSourceUnitTests {
 
     @Test
     public void shouldIgnoreRegister() {
-        try (ConfigSource src = new ConfigSource("/")) {
+        try (ConfigSource src = new ConfigSource(classLoader,"/")) {
             src.register(null);
             src.unregister(null);
         }
@@ -39,7 +38,7 @@ public class ConfigSourceUnitTests {
 
     @Test
     public void shouldHandlePath() {
-        try (ConfigSource src = new ConfigSource("custom.conf")) {
+        try (ConfigSource src = new ConfigSource(classLoader,"custom.conf")) {
             assertEquals(src.getPath(), "custom.conf");
             TestingSink sink = new TestingSink();
             src.initialize(sink);
@@ -50,7 +49,7 @@ public class ConfigSourceUnitTests {
 
     @Test
     public void shouldSupportIterator() {
-        try (ConfigSource src = new ConfigSource("custom.conf")) {
+        try (ConfigSource src = new ConfigSource(classLoader,"custom.conf")) {
             TestingSink sink = new TestingSink();
             sink.addAll(src.iterator());
             assertEquals(false, sink.get("values.boolean", false));

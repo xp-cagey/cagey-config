@@ -14,13 +14,15 @@ public class ModularConfig implements Config {
     private final ConcurrentHashMap<String, ImmutableSortedElementSet> values = new ConcurrentHashMap<>();
     private final List<ConfigSettings> settings = new ArrayList<>();
     private final String name;
-    private final ConfigEventBindings<Element> bindings;
+    private final Executor exec;
+    private final ConfigEventBindings<RawValueElement> bindings;
     private final MergeOperator onInitialized;
     private final MergeOperator onUpdated;
     private final MergeOperator onRemoved;
 
     ModularConfig(Executor exec, String name) {
         this.name = name;
+        this.exec = exec;
         this.bindings = new ConfigEventBindings<>(exec);
         this.onInitialized = new OnInitialized(values, bindings);
         this.onUpdated = new OnUpdated(values, bindings);
@@ -39,30 +41,40 @@ public class ModularConfig implements Config {
         };
     }
 
+    @Override public Config subtree(String prefix) { return new Subtree(this, exec, prefix); }
+
     @Override public SortedMap<String, Element> getAll() {
         final SortedMap<String, Element> out = new TreeMap<>();
-        for (Map.Entry<String, ImmutableSortedElementSet> entry : values.entrySet()) {
+        for (Map.Entry<String, ImmutableSortedElementSet> entry : entrySet()) {
             out.put(entry.getKey(), entry.getValue().element());
         }
         return out;
     }
     @Override public boolean hasKey(String key) { return values.containsKey(key); }
-    @Override public Element getOrNull(String key) {
+    @Override public RawValueElement getOrNull(String key) {
         final ImmutableSortedElementSet set = values.get(key);
         return (set == null) ? DefaultManagement.getOrNull(key) : set.element();
     }
     @Override public Iterator<Element> iterator() { return new ImmutableSortedElementSet.Iterator(values.values().iterator()); }
     @Override public void addListener(Consumer<Element> listener) { bindings.addListener(listener); }
     @Override public void removeListener(Consumer<Element> listener) { bindings.addListener(listener); }
-    @Override public void addTrigger(String key, Consumer<Element> trigger) { bindings.addTrigger(key, trigger); }
     @Override public void removeTrigger(String key, Consumer<Element> trigger) { bindings.addTrigger(key, trigger); }
+    @Override public void addTrigger(String key, Consumer<Element> trigger) {
+        bindings.addTrigger(key, trigger);
+        Element e = getOrNull(key);
+        if (e != null)
+            trigger.accept(e);
+    }
+
     @Override public void close() {
         synchronized (settings) {
             for (ConfigSettings s : settings) {
                 s.module.removeListener(s.listener);
                 s.module.removeReaper(s.reaper);
             }
+            settings.clear();
         }
+        bindings.notifyClosed();
     }
 
     void append(ConfigModule module) {
@@ -81,6 +93,19 @@ public class ModularConfig implements Config {
                 onInitialized.apply(e.getKey(), score, e);
         }
     }
+
+
+
+    void attach(Consumer<RawValueElement> listener, Consumer<Boolean> dependency) {
+        bindings.addListener(listener);
+        bindings.addDependency(dependency);
+    }
+    void detatch(Consumer<RawValueElement> listener, Consumer<Boolean> dependency) {
+        bindings.removeListener(listener);
+        bindings.removeDependency(dependency);
+    }
+
+    Set<Map.Entry<String, ImmutableSortedElementSet>> entrySet() { return values.entrySet(); }
 
     private static class ConfigSettings {
         final ConfigModule module;

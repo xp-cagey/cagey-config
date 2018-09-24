@@ -10,9 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -57,6 +55,13 @@ public class ModularConfigUnitTests {
     }
 
     @Test
+    public void shouldSpawnAndCleanupSubtrees() {
+        ModularConfig cfg = new ModularConfig(exec, "test");
+        cfg.subtree("prefix");
+        cfg.close();
+    }
+
+    @Test
     public void shouldForwardModuleInitialization() {
         RawValueElement ele = new BooleanElement("key", true, true);
         Consumer<Element> listener = mock(ElementConsumer.class);
@@ -76,6 +81,21 @@ public class ModularConfigUnitTests {
         verify(listener).accept(any());
         verify(trigger).accept(any());
         verifyNoMoreInteractions(listener, trigger);
+    }
+
+    @Test
+    public void shouldTriggerOnAddIfValueExists() {
+        RawValueElement ele = new BooleanElement("key", true, true);
+        when(module.iterator()).thenReturn(Collections.singleton(ele).iterator());
+        ModularConfig cfg = new ModularConfig(exec, "test");
+        cfg.append(module);
+        assertNotNull(cfg.getOrNull("key"));
+
+        Consumer<Element> trigger = mock(ElementConsumer.class);
+        cfg.addTrigger("key", trigger);
+        verify(trigger).accept(any());
+
+        cfg.close();
     }
 
     @Test

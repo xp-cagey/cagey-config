@@ -1,9 +1,7 @@
 package com.xpcagey.config.core;
 
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -12,7 +10,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
 public class WeakConsumers<T> implements BiPredicate<Executor, T> {
-    private final HashMap<Entry<T>, Boolean> mapping = new HashMap<>();
+    private final HashMap<Entry<? super T>, Boolean> mapping = new HashMap<>();
     private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
     private final Lock rLock = rwLock.readLock();
     private final Lock wLock = rwLock.writeLock();
@@ -24,18 +22,20 @@ public class WeakConsumers<T> implements BiPredicate<Executor, T> {
     }
 
     @Override public boolean test(Executor exec, T t) {
+        boolean dirty = false;
         rLock.lock();
+        Set<WeakConsumers.Entry<? super T>> items;
         try {
-            boolean dirty = false;
             if (expired)
                 return false;
-            for(Entry<T> e : mapping.keySet()) {
-                if (!e.apply(exec, t)) dirty = true;
-            }
-            if (!dirty) return true;
+            items = new HashSet<>(mapping.keySet());
         } finally {
             rLock.unlock();
         }
+        for(Entry<? super T> e : items) {
+            if (!e.apply(exec, t)) dirty = true;
+        }
+        if (!dirty) return true;
         wLock.lock();
         try {
             return !checkExpired();
@@ -44,7 +44,7 @@ public class WeakConsumers<T> implements BiPredicate<Executor, T> {
         }
     }
 
-    boolean add(Consumer<T> element) {
+    boolean add(Consumer<? super T> element) {
         wLock.lock();
         try {
             if (expired)
@@ -56,7 +56,7 @@ public class WeakConsumers<T> implements BiPredicate<Executor, T> {
         }
     }
 
-    boolean remove(Consumer<T> element) {
+    boolean remove(Consumer<? super T> element) {
         wLock.lock();
         try {
             mapping.remove(new Entry<>(element), true);
@@ -81,9 +81,9 @@ public class WeakConsumers<T> implements BiPredicate<Executor, T> {
     }
 
     // package level access for testing only
-    static class Entry<T> extends WeakReference<Consumer<T>> {
+    static class Entry<Q> extends WeakReference<Consumer<Q>> {
         private int hash;
-        Entry(Consumer<T> c) {
+        Entry(Consumer<Q> c) {
             super(c);
             this.hash = c.hashCode();
         }
@@ -97,8 +97,8 @@ public class WeakConsumers<T> implements BiPredicate<Executor, T> {
             return value.equals(other);
         }
 
-        boolean apply(Executor exec, T value) {
-            Consumer<T> func = get();
+        boolean apply(Executor exec, Q value) {
+            Consumer<Q> func = get();
             if (func == null)
                 return false;
             exec.execute(() -> func.accept(value));

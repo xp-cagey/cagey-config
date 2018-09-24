@@ -17,7 +17,7 @@ public class TestConfigEngine implements ConfigEngine {
     @Override public void setDefault(String key, Instant value) { defaults.put(key, value); }
     @Override public void setDefault(String key, long value) { defaults.put(key, value); }
     @Override public void setDefault(String key, String value) { defaults.put(key, value); }
-    @Override public Config load(String name, Executor exec, Descriptor... descriptors) {
+    @Override public Config load(String name, ClassLoader loader, Executor exec, Descriptor... descriptors) {
         Config config = mock(Config.class);
         when(config.getName()).thenReturn("From TestConfigEngine");
         return config;

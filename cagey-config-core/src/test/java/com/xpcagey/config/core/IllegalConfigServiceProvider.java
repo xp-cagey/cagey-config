@@ -6,5 +6,7 @@ import com.xpcagey.config.spi.IllegalPathException;
 
 public class IllegalConfigServiceProvider implements ConfigServiceProvider {
     @Override public String getName() { return "illegal"; }
-    @Override public ConfigSource load(String path) throws IllegalPathException { throw new IllegalPathException(getName(), path, null); }
+    @Override public ConfigSource load(ClassLoader loader, String path) throws IllegalPathException {
+        throw new IllegalPathException(getName(), path, null);
+    }
 }

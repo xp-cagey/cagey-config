@@ -8,5 +8,5 @@ package com.xpcagey.config.spi;
  */
 public interface ConfigServiceProvider {
     String getName();
-    ConfigSource load(String path) throws IllegalPathException;
+    ConfigSource load(ClassLoader loader, String path) throws IllegalPathException;
 }

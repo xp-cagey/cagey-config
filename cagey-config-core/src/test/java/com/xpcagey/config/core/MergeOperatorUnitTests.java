@@ -14,7 +14,7 @@ public class MergeOperatorUnitTests {
     @Test
     public void shouldSwapNullWithNullWithoutUpdate() {
         final RawValueElement element = mock(RawValueElement.class);
-        final ConfigEventBindings<Element> bindings = mock(ElementConfigEventBindings.class);
+        final ConfigEventBindings<RawValueElement> bindings = mock(RawValueElementConfigEventBindings.class);
         final ConcurrentMap<String, ImmutableSortedElementSet> map = mock(ElementConcurrentMap.class);
         when(map.get(anyString())).thenReturn(null);
 
@@ -33,7 +33,7 @@ public class MergeOperatorUnitTests {
     public void shouldSwapValueWithNull() {
         final RawValueElement element = mock(RawValueElement.class);
         final ImmutableSortedElementSet set = mock(ImmutableSortedElementSet.class);
-        final ConfigEventBindings<Element> bindings = mock(ElementConfigEventBindings.class);
+        final ConfigEventBindings<RawValueElement> bindings = mock(RawValueElementConfigEventBindings.class);
         final ConcurrentMap<String, ImmutableSortedElementSet> map = mock(ElementConcurrentMap.class);
         when(map.get(anyString())).thenReturn(set);
         when(map.remove(anyString(),any())).thenReturn(false, true); // force it to make 2 attempts
@@ -55,7 +55,7 @@ public class MergeOperatorUnitTests {
     public void shouldSwapNullWithValue() {
         final RawValueElement element = mock(RawValueElement.class);
         final ImmutableSortedElementSet set = mock(ImmutableSortedElementSet.class);
-        final ConfigEventBindings<Element> bindings = mock(ElementConfigEventBindings.class);
+        final ConfigEventBindings<RawValueElement> bindings = mock(RawValueElementConfigEventBindings.class);
         final ConcurrentMap<String, ImmutableSortedElementSet> map = mock(ElementConcurrentMap.class);
         when(map.get(anyString())).thenReturn(null);
         when(map.putIfAbsent(anyString(),any())).thenReturn(set, null); // force it to make 2 attempts
@@ -78,7 +78,7 @@ public class MergeOperatorUnitTests {
         final RawValueElement element = mock(RawValueElement.class);
         final ImmutableSortedElementSet set = mock(ImmutableSortedElementSet.class);
         when(set.matches(any())).thenReturn(true);
-        final ConfigEventBindings<Element> bindings = mock(ElementConfigEventBindings.class);
+        final ConfigEventBindings<RawValueElement> bindings = mock(RawValueElementConfigEventBindings.class);
         final ConcurrentMap<String, ImmutableSortedElementSet> map = mock(ElementConcurrentMap.class);
         when(map.get(anyString())).thenReturn(set);
         when(map.replace(anyString(), any(), any())).thenReturn(false, true); // force retry
@@ -101,7 +101,7 @@ public class MergeOperatorUnitTests {
         final ImmutableSortedElementSet set = mock(ImmutableSortedElementSet.class);
         when(set.matches(any())).thenReturn(false);
         final ImmutableSortedElementSet set2 = mock(ImmutableSortedElementSet.class);
-        final ConfigEventBindings<Element> bindings = mock(ElementConfigEventBindings.class);
+        final ConfigEventBindings<RawValueElement> bindings = mock(RawValueElementConfigEventBindings.class);
         final ConcurrentMap<String, ImmutableSortedElementSet> map = mock(ElementConcurrentMap.class);
         when(map.get(anyString())).thenReturn(set);
         when(map.replace(anyString(), any(), any())).thenReturn(false, true); // force retry

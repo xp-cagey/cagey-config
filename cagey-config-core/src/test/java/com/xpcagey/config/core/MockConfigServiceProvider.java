@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 public class MockConfigServiceProvider implements ConfigServiceProvider {
     @Override public String getName() { return "mock"; }
-    @Override public ConfigSource load(String path) {
+    @Override public ConfigSource load(ClassLoader loader, String path) {
         return new ConfigSource(){
             @Override public Iterator<ValueCommand> iterator() { return Collections.emptyIterator(); }
             @Override public void close() {}

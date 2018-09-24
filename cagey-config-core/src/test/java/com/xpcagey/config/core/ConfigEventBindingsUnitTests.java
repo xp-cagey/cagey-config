@@ -37,6 +37,20 @@ public class ConfigEventBindingsUnitTests {
     }
 
     @Test
+    public void shouldNotifyOnClose() {
+        Consumer<Boolean> onClose = mock(BooleanConsumer.class);
+
+        ConfigEventBindings<Element> bindings = new ConfigEventBindings<>(exec);
+        bindings.addDependency(onClose);
+        bindings.notifyClosed();
+        bindings.removeDependency(onClose);
+        bindings.notifyClosed();
+
+        verify(onClose).accept(any());
+        verifyNoMoreInteractions(onClose);
+    }
+
+    @Test
     public void shouldNotifyOnTrigger() {
         Element e = mock(Element.class);
         when(e.getKey()).thenReturn("key");

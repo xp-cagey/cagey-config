@@ -12,5 +12,5 @@ public interface ConfigEngine {
     void setDefault(String key, long value);
     void setDefault(String key, String value);
 
-    Config load(String name, Executor exec, Descriptor... descriptors) throws ConfigLoadException;
+    Config load(String name, ClassLoader loader, Executor exec, Descriptor... descriptors) throws ConfigLoadException;
 }

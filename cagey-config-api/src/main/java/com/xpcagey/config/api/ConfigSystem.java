@@ -14,14 +14,18 @@ public final class ConfigSystem {
     private static volatile ConfigEngine engine;
 
     public static void setDefault(String key, boolean value) { bind().setDefault(key, value); }
+    public static void setDefault(String key, double value) { bind().setDefault(key, value); }
     public static void setDefault(String key, Duration value) { bind().setDefault(key, value); }
     public static void setDefault(String key, Instant value) { bind().setDefault(key, value); }
-    public static void setDefault(String key, float value) { bind().setDefault(key, value); }
-    public static void setDefault(String key, int value) { bind().setDefault(key, value); }
+    public static void setDefault(String key, long value) { bind().setDefault(key, value); }
     public static void setDefault(String key, String value) { bind().setDefault(key, value); }
 
     public static synchronized Config load(String name, Executor exec, Descriptor... descriptors) throws ConfigLoadException {
-        return bind().load(name, exec, descriptors);
+        return bind().load(name, loader.getClass().getClassLoader(), exec, descriptors);
+    }
+
+    public static synchronized Config load(String name, ClassLoader classLoader, Executor exec, Descriptor... descriptors) throws ConfigLoadException {
+        return bind().load(name, classLoader, exec, descriptors);
     }
 
     private static ConfigEngine bind() {

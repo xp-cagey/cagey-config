@@ -13,14 +13,14 @@ class ConfigSource implements com.xpcagey.config.spi.ConfigSource {
     private final String path;
     private final Config config;
 
-    ConfigSource(String path) {
+    ConfigSource(ClassLoader loader, String path) {
         this.path = path;
         if (path.startsWith("/"))
             path = path.substring(1);
         if (path.isEmpty())
-            config = ConfigFactory.load();
+            config = ConfigFactory.load(loader);
         else
-            config = ConfigFactory.load(path);
+            config = ConfigFactory.load(loader, path);
     }
 
     @Override public String getPath() { return path; }

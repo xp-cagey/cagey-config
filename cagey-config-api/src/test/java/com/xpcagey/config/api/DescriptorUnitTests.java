@@ -2,13 +2,11 @@ package com.xpcagey.config.api;
 
 import org.junit.Test;
 
-import java.net.URISyntaxException;
-
 import static org.junit.Assert.*;
 
 public class DescriptorUnitTests {
     @Test
-    public void shouldConstructProperly() throws URISyntaxException {
+    public void shouldConstructProperly() {
         Descriptor test = TestDescriptor.create("provider-x", "alias-x", "path", true);
         assertEquals("provider-x", test.getProvider());
         assertEquals("alias-x", test.getAlias());

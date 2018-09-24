@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
@@ -22,6 +21,7 @@ import static org.mockito.Mockito.*;
 
 public class ConfigSystemUnitTests {
     final Executor exec = Runnable::run; // inline execution
+    final ClassLoader classLoader = getClass().getClassLoader();
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
@@ -104,7 +104,7 @@ public class ConfigSystemUnitTests {
         Config config = mock(Config.class);
 
         ConfigEngine engine = mock(ConfigEngine.class);
-        doReturn(config).when(engine).load(any(), any(), any());
+        doReturn(config).when(engine).load(any(), any(), any(), any());
 
         when(mockLoader.iterator()).thenReturn(Collections.singleton(engine).iterator());
 
@@ -114,7 +114,7 @@ public class ConfigSystemUnitTests {
         ConfigSystem.setDefault("instant-x", Instant.ofEpochMilli(123));
         ConfigSystem.setDefault("duration-x", Duration.ofSeconds(3));
         ConfigSystem.setDefault("bool-x", false);
-        assertEquals(config, ConfigSystem.load("config", exec, desc));
+        assertEquals(config, ConfigSystem.load("config", classLoader, exec, desc));
 
         verify(engine).setDefault("string-x", "value");
         verify(engine).setDefault("int-x", 1);
@@ -122,7 +122,22 @@ public class ConfigSystemUnitTests {
         verify(engine).setDefault("instant-x", Instant.ofEpochMilli(123));
         verify(engine).setDefault("duration-x", Duration.ofSeconds(3));
         verify(engine).setDefault("bool-x", false);
-        verify(engine).load("config", exec, desc);
+        verify(engine).load("config", classLoader, exec, desc);
+        verifyNoMoreInteractions(engine);
+    }
+
+    @Test
+    public void shouldAllowLegacyFormatCall() throws ConfigLoadException {
+        Descriptor desc = new PathDescriptor("loader", "path", "alias", true);
+        Config config = mock(Config.class);
+
+        ConfigEngine engine = mock(ConfigEngine.class);
+        doReturn(config).when(engine).load(any(), any(), any(), any());
+
+        when(mockLoader.iterator()).thenReturn(Collections.singleton(engine).iterator());
+        assertEquals(config, ConfigSystem.load("config", exec, desc));
+
+        verify(engine).load("config", ConfigSystem.class.getClassLoader(), exec, desc);
         verifyNoMoreInteractions(engine);
     }
 }

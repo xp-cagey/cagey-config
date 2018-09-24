@@ -26,7 +26,12 @@ abstract class BaseElement<T> implements RawValueElement {
     @Override public long getAsLong() { return DefaultManagement.getLong(key); }
     @Override public String getAsString() { return DefaultManagement.getString(key); }
 
-    @Override public int compareTo(Element o) { return key.compareTo(o.getKey()); }
+    @Override public int compareTo(Element other) {
+        if (other instanceof SubtreeElement)
+            return other.compareTo(this);
+        return key.compareTo(other.getKey());
+    }
+
     @Override public boolean hasRawValue(Object value) { return value != null && value.equals(this.value); }
     @Override public boolean hasEqualValue(Element other) {
         if (other instanceof RawValueElement)

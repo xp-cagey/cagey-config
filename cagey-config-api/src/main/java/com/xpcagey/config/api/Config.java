@@ -19,6 +19,17 @@ public interface Config extends Iterable<Element>, AutoCloseable {
      */
     Iterator<String> getSources();
 
+
+    /**
+     * Creates an artificial mapping of elements that start with the input path segment prefix; skips the prefix when
+     * reporting names inside of the subtree. No wildcards or partial matches are supported; all segments of the path
+     * prefix must be an exact match.  The subtree will correctly reflect any updates to the underlying root as they
+     * occur.
+     * @param prefix a dotted set of path segments to be used as an input filter
+     * @return a Config that represents the subsection of configuration beginning with the prefix
+     */
+    Config subtree(String prefix);
+
     /**
      * Queries the configuration to see if it currently has an element at the specified key
      * @param key the key to search
@@ -53,7 +64,7 @@ public interface Config extends Iterable<Element>, AutoCloseable {
     /**
      * Attempt to retrieve an element by key without needing conditional logic to interpret the result; best used when
      * a default has been set for the key or when the program must have a value to operate correctly.
-     * @param key
+     * @param key the key to search
      * @return the element if found
      * @throws MissingElementException if the element was not found
      */

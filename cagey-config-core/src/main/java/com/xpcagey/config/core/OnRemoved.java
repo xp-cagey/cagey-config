@@ -1,12 +1,11 @@
 package com.xpcagey.config.core;
 
-import com.xpcagey.config.api.Element;
 import com.xpcagey.config.element.RawValueElement;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 class OnRemoved extends MergeOperator {
-    OnRemoved(ConcurrentHashMap<String, ImmutableSortedElementSet> map, ConfigEventBindings<Element> bindings) {
+    OnRemoved(ConcurrentHashMap<String, ImmutableSortedElementSet> map, ConfigEventBindings<RawValueElement> bindings) {
         super(map, bindings);
     }
 

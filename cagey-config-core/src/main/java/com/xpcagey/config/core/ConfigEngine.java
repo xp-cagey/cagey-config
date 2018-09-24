@@ -23,7 +23,7 @@ public class ConfigEngine implements com.xpcagey.config.api.ConfigEngine {
     @Override public void setDefault(String key, String value) { DefaultManagement.set(key, value); }
 
     @Override
-    public Config load(String name, Executor exec, Descriptor... descriptors) throws ConfigLoadException {
+    public Config load(String name, ClassLoader classLoader, Executor exec, Descriptor... descriptors) throws ConfigLoadException {
         synchronized(providers) {
             // look up our available providers
             if (providers.isEmpty()) {
@@ -46,7 +46,7 @@ public class ConfigEngine implements com.xpcagey.config.api.ConfigEngine {
                     Descriptor resolved = resolve(exec, d, byAlias);
                     Optional<ConfigModule> module = Optional.ofNullable(modules.get(resolved));
                     if (!module.isPresent())
-                        module = load(d).map(src -> {
+                        module = load(classLoader, d).map(src -> {
                             ConfigModule found = new ConfigModule(exec, d, src);
                             modules.put(d, found);
                             return found;
@@ -79,11 +79,11 @@ public class ConfigEngine implements com.xpcagey.config.api.ConfigEngine {
         }
     }
 
-    private Optional<ConfigSource> load(Descriptor d) throws ConfigLoadException {
+    private Optional<ConfigSource> load(ClassLoader classLoader, Descriptor d) throws ConfigLoadException {
         try {
             ConfigServiceProvider csp = providers.get(d.getProvider());
             if (csp != null)
-                return Optional.of(csp.load(d.getRawPath()));
+                return Optional.of(csp.load(classLoader, d.getRawPath()));
             else if (d.isRequired())
                 throw new MissingLoaderException(d.getProvider());
             return Optional.empty();

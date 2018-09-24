@@ -1,15 +1,14 @@
 package com.xpcagey.config.core;
 
-import com.xpcagey.config.api.Element;
 import com.xpcagey.config.element.RawValueElement;
 
 import java.util.concurrent.ConcurrentMap;
 
 abstract class MergeOperator {
     private final ConcurrentMap<String, ImmutableSortedElementSet> map;
-    private final ConfigEventBindings<Element> bindings;
+    private final ConfigEventBindings<RawValueElement> bindings;
 
-    MergeOperator(ConcurrentMap<String, ImmutableSortedElementSet> map, ConfigEventBindings<Element> bindings) {
+    MergeOperator(ConcurrentMap<String, ImmutableSortedElementSet> map, ConfigEventBindings<RawValueElement> bindings) {
         this.map = map;
         this.bindings = bindings;
     }

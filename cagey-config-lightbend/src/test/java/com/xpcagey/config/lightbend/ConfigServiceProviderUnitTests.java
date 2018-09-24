@@ -12,6 +12,6 @@ public class ConfigServiceProviderUnitTests {
 
     @Test
     public void checkOutput() {
-        assertNotNull(new ConfigServiceProvider().load(""));
+        assertNotNull(new ConfigServiceProvider().load(getClass().getClassLoader(), ""));
     }
 }
