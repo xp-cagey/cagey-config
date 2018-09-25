@@ -3,11 +3,10 @@ package com.xpcagey.config.lightbend;
 import com.typesafe.config.*;
 import com.xpcagey.config.spi.ConfigSink;
 import com.xpcagey.config.spi.ValueCommand;
+import com.xpcagey.config.spi.ValueCommandIterable;
 
 import java.util.*;
 import java.util.function.Consumer;
-
-import com.xpcagey.config.spi.ValueCommandIterable;
 
 class ConfigSource implements com.xpcagey.config.spi.ConfigSource {
     private final String path;
@@ -30,8 +29,7 @@ class ConfigSource implements com.xpcagey.config.spi.ConfigSource {
     @Override public void close() {}
 
     @Override public void initialize(ConfigSink sink) {
-        Queue<Map.Entry<String, ConfigValue>> entries = new LinkedList<>();
-        entries.addAll(config.root().entrySet());
+        Queue<Map.Entry<String, ConfigValue>> entries = new LinkedList<>(config.root().entrySet());
         while(!entries.isEmpty()) {
             Map.Entry<String, ConfigValue> entry = entries.remove();
             String key = entry.getKey();

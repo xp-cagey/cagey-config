@@ -15,19 +15,19 @@ import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class ConfigSystemUnitTests {
-    final Executor exec = Runnable::run; // inline execution
-    final ClassLoader classLoader = getClass().getClassLoader();
+    private final Executor exec = Runnable::run; // inline execution
+    private final ClassLoader classLoader = getClass().getClassLoader();
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
 
     @Mock
     private Iterable<ConfigEngine> mockLoader;

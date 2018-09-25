@@ -5,14 +5,17 @@ import com.xpcagey.config.api.Element;
 import com.xpcagey.config.element.RawValueElement;
 import com.xpcagey.config.element.SubtreeElement;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 public class Subtree implements Config {
     private final ModularConfig root;
     private final String prefix;
-    private ConfigEventBindings<RawValueElement> bindings;
+    private final ConfigEventBindings<RawValueElement> bindings;
 
     Subtree(ModularConfig root, Executor exec, String prefix) {
         if (!prefix.endsWith("."))
@@ -57,7 +60,7 @@ public class Subtree implements Config {
     }
 
     @Override public void close() {
-        root.detatch(this::onUpdated, this::onRootClosed);
+        root.detach(this::onUpdated, this::onRootClosed);
         bindings.clear();
     }
     @Override public Iterator<Element> iterator() { return getAll().values().iterator(); }

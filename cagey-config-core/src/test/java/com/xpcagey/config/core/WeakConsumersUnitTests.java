@@ -75,7 +75,7 @@ public class WeakConsumersUnitTests {
         Executor exec = Runnable::run; // execute inline
 
         WeakConsumers<String> consumers = new WeakConsumers<>(true);
-        assertTrue(consumers.add((s) -> { count.incrementAndGet(); })); // will immediately be eligible for GC
+        assertTrue(consumers.add((s) -> count.incrementAndGet())); // will immediately be eligible for GC
         System.gc();
 
         assertFalse(consumers.test(exec, "test"));
@@ -88,7 +88,7 @@ public class WeakConsumersUnitTests {
         Executor exec = Runnable::run; // execute inline
 
         WeakConsumers<String> consumers = new WeakConsumers<>(false);
-        assertTrue(consumers.add((s) -> { count.incrementAndGet(); })); // will immediately be eligible for GC
+        assertTrue(consumers.add((s) -> count.incrementAndGet())); // will immediately be eligible for GC
         System.gc();
 
         assertTrue(consumers.test(exec, "test")); // still ok to execute
@@ -102,7 +102,7 @@ public class WeakConsumersUnitTests {
         Executor exec = Runnable::run; // execute inline
 
         WeakConsumers<String> consumers = new WeakConsumers<>(true);
-        assertTrue(consumers.add((s) -> { count.incrementAndGet(); })); // will immediately be eligible for GC
+        assertTrue(consumers.add((s) -> count.incrementAndGet())); // will immediately be eligible for GC
         assertTrue(consumers.add(consumer));
         System.gc();
 

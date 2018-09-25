@@ -1,7 +1,9 @@
 package com.xpcagey.config.core;
 
 import java.lang.ref.WeakReference;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -82,7 +84,7 @@ public class WeakConsumers<T> implements BiPredicate<Executor, T> {
 
     // package level access for testing only
     static class Entry<Q> extends WeakReference<Consumer<Q>> {
-        private int hash;
+        private final int hash;
         Entry(Consumer<Q> c) {
             super(c);
             this.hash = c.hashCode();
@@ -91,10 +93,13 @@ public class WeakConsumers<T> implements BiPredicate<Executor, T> {
         @Override public int hashCode() { return hash; }
         @Override public boolean equals(Object o) {
             Consumer<?> value = get();
-            Consumer<?> other = ((Entry<?>)o).get();
-            if(value == null)
-                return other == null;
-            return value.equals(other);
+            if (o instanceof Entry<?>) {
+                Consumer<?> other = ((Entry<?>) o).get();
+                if (value == null)
+                    return other == null;
+                return value.equals(other);
+            }
+            return false;
         }
 
         boolean apply(Executor exec, Q value) {

@@ -9,7 +9,8 @@ import org.mockito.junit.MockitoRule;
 import java.time.Duration;
 import java.time.Instant;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class ValueCommandUnitTests {
     @Rule

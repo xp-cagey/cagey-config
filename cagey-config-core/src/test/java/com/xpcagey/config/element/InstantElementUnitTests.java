@@ -4,10 +4,9 @@ import com.xpcagey.config.api.Element;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.Duration;
 import java.time.Instant;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class InstantElementUnitTests {
 

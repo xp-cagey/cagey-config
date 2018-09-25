@@ -100,7 +100,7 @@ public class ModularConfig implements Config {
         bindings.addListener(listener);
         bindings.addDependency(dependency);
     }
-    void detatch(Consumer<RawValueElement> listener, Consumer<Boolean> dependency) {
+    void detach(Consumer<RawValueElement> listener, Consumer<Boolean> dependency) {
         bindings.removeListener(listener);
         bindings.removeDependency(dependency);
     }

@@ -1,6 +1,6 @@
 package com.xpcagey.config.core;
 
-import com.xpcagey.config.api.*;
+import com.xpcagey.config.api.Descriptor;
 import com.xpcagey.config.element.RawValueElement;
 import com.xpcagey.config.spi.ConfigSource;
 import com.xpcagey.config.spi.ValueCommand;
@@ -46,8 +46,8 @@ public class ConfigModuleUnitTests {
         assertFalse(module.iterator().hasNext());
         module.close();
 
-        verify(desc).getAlias();
-        verify(desc).getProvider();
+        assertNull(verify(desc).getAlias());
+        assertNull(verify(desc).getProvider());
         verify(desc).getRawPath();
         verify(src).getPath();
         verify(src).register(any());

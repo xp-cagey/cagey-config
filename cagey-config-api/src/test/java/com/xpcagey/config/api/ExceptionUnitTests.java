@@ -4,12 +4,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.net.URISyntaxException;
 import java.util.Arrays;
 
 public class ExceptionUnitTests {
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void illegalPathException() throws IllegalPathException {

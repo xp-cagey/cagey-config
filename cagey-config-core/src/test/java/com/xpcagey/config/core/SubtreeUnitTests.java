@@ -9,7 +9,10 @@ import org.junit.Test;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.SortedMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
@@ -32,7 +35,7 @@ public class SubtreeUnitTests {
         Subtree sub = new Subtree(cfg, exec,"prefix");
         verify(cfg).attach(any(), any());
         sub.close();
-        verify(cfg).detatch(any(), any());
+        verify(cfg).detach(any(), any());
         verifyNoMoreInteractions(cfg);
     }
 
@@ -81,7 +84,6 @@ public class SubtreeUnitTests {
             return null;
         }).when(cfg).attach(any(), any());
 
-        when(cfg.iterator()).thenReturn(Collections.emptyIterator());
         Subtree sub = new Subtree(cfg, exec, "prefix");
         sub.addListener(listener);
         sub.addTrigger("key", trigger);

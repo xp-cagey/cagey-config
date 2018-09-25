@@ -13,5 +13,5 @@ public class LongElement extends BaseElement<Long> {
     @Override public Duration getAsDuration() { return Duration.ofMillis(value); }
     @Override public Instant getAsInstant() { return Instant.ofEpochMilli(value); }
     @Override public long getAsLong() { return value; }
-    @Override public String getAsString() { return Long.valueOf(value).toString(); }
+    @Override public String getAsString() { return value.toString(); }
 }

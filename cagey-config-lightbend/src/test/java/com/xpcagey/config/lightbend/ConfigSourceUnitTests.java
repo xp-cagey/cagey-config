@@ -3,13 +3,13 @@ package com.xpcagey.config.lightbend;
 import com.xpcagey.config.spi.helpers.TestingSink;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * These values come from reference.conf
  */
 public class ConfigSourceUnitTests {
-    final ClassLoader classLoader = getClass().getClassLoader();
+    private final ClassLoader classLoader = getClass().getClassLoader();
 
     @Test
     public void shouldLoadValuesCorrectly() {

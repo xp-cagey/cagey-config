@@ -1,6 +1,7 @@
 package com.xpcagey.config.core;
 
 import com.xpcagey.config.api.Element;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;

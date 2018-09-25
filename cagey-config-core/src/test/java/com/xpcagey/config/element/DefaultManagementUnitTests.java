@@ -3,7 +3,8 @@ package com.xpcagey.config.element;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.*;
+import java.time.Duration;
+import java.time.Instant;
 
 import static org.junit.Assert.*;
 
@@ -53,5 +54,5 @@ public class DefaultManagementUnitTests {
     public void shouldReportUnsetValuesCorrectly() {
         DefaultManagement.set("key-x", 12);
         assertEquals("12", DefaultManagement.getOrNull("key-x").getAsString());
-        assertEquals(null, DefaultManagement.getOrNull("key-2-x"));
+        assertNull(DefaultManagement.getOrNull("key-2-x"));
     }}

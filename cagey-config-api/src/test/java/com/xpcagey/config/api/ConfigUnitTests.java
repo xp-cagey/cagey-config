@@ -12,7 +12,7 @@ import static org.mockito.Mockito.*;
 
 public class ConfigUnitTests {
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void shouldForwardMissingCorrectly() throws MissingElementException {

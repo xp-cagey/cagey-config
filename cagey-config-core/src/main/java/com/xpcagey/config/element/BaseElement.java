@@ -8,7 +8,7 @@ import java.time.Instant;
 abstract class BaseElement<T> implements RawValueElement {
     private final String key;
     private final boolean sensitive;
-    protected final transient T value;
+    final transient T value;
 
     BaseElement(String key, boolean sensitive, T value) {
         this.key = key;

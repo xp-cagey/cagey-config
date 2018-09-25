@@ -1,13 +1,12 @@
 package com.xpcagey.config.core;
 
-import com.xpcagey.config.api.Element;
 import com.xpcagey.config.element.RawValueElement;
-import jdk.nashorn.internal.ir.annotations.Immutable;
 import org.junit.Test;
 
 import java.util.concurrent.ConcurrentMap;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class MergeOperatorUnitTests {
@@ -46,7 +45,7 @@ public class MergeOperatorUnitTests {
 
         op.apply("", 0, element);
         verify(map, times(2)).get(anyString());
-        verify(map, times(2)).remove(anyString(),any());
+        verify(map, times(2)).remove(anyString(), any());
         verify(bindings).notifyRemoved(anyString());
         verifyNoMoreInteractions(element, bindings, map);
     }
@@ -58,7 +57,8 @@ public class MergeOperatorUnitTests {
         final ConfigEventBindings<RawValueElement> bindings = mock(RawValueElementConfigEventBindings.class);
         final ConcurrentMap<String, ImmutableSortedElementSet> map = mock(ElementConcurrentMap.class);
         when(map.get(anyString())).thenReturn(null);
-        when(map.putIfAbsent(anyString(),any())).thenReturn(set, null); // force it to make 2 attempts
+        final ImmutableSortedElementSet none = null;
+        when(map.putIfAbsent(anyString(),any())).thenReturn(set, none); // force it to make 2 attempts
 
         MergeOperator op = new MergeOperator(map, bindings) {
             @Override protected ImmutableSortedElementSet execute(ImmutableSortedElementSet prev, int score, RawValueElement element) {

@@ -6,10 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TestConfigEngine implements ConfigEngine {
-    Map<String, Object> defaults = new HashMap<>();
+    private final Map<String, Object> defaults = new HashMap<>();
 
     @Override public void setDefault(String key, boolean value) { defaults.put(key, value); }
     @Override public void setDefault(String key, double value) { defaults.put(key, value); }
