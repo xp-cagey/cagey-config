@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 class ConfigModule implements Iterable<RawValueElement>, AutoCloseable {
     private final NavigableMap<String, RawValueElement> values = new ConcurrentSkipListMap<>();
     private final ConfigEventBindings<RawValueElement> bindings;
-    private final Consumer<ValueCommand> sink;
+    private final Sink sink;
     private final ConfigSource source;
     private final Descriptor desc;
 
@@ -27,6 +27,7 @@ class ConfigModule implements Iterable<RawValueElement>, AutoCloseable {
         this.source = source;
         this.sink = new Sink();
         this.source.register(this.sink);
+        this.source.initialize(this.sink);
     }
 
     RawValueElement getOrNull(String key) { return values.get(key); }
